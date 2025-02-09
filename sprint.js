@@ -1,7 +1,7 @@
 const input = [99, 1098, 1, 0, 2, 1, 100, 105, 1098, 9];
 const functionDefinitions = [];
 const functionsInfo = {
-  1098: { start: 0, end: 6, reference: [1, 0, 1, 1] },
+  1098: { start: 0, end: 6, reference: input.slice(2, 6) },
 };
 
 const compile = (code, ip) => {
@@ -21,6 +21,7 @@ const compile = (code, ip) => {
 
 const add = (code, ip) => {
   const [o1, o2, res] = code.slice(ip + 1, ip + 4);
+  console.log(o1, o2, res);
   code[res] = code[o1] + code[o2];
   console.log(code[o1], code[o2], code[res], code);
 };
@@ -37,8 +38,9 @@ const functionCall = (code, ip) => {
   return execute(code, ip + 2);
 };
 
-const halt = () => {
-  return input;
+const halt = (code) => {
+  // console.log(code);
+  return code;
 };
 
 const operations = {
@@ -49,7 +51,7 @@ const operations = {
 };
 
 const execute = (code, ip) => {
-  operations[code[ip]](code, ip);
+  return operations[code[ip]](code, ip);
 };
 
 const sprint = (code, ip) => {
@@ -57,7 +59,7 @@ const sprint = (code, ip) => {
   console.log(isValid);
 
   if (isValid) {
-    return execute(code, 0);
+    return execute(code, ip);
   }
 };
 
