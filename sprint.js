@@ -1,70 +1,84 @@
-const input = [99, 1098, 1, 0, 2, 1, 100, 105, 1098, 9];
-const functionDefinitions = [];
-const functionsInfo = {
-  1098: { start: 0, end: 6, reference: input.slice(2, 6) },
+const add = (code, index) => {
+  const [operand1, operand2, result] = code.slice(index + 1, index + 4);
+  code[result] = code[operand1] + code[operand2];
+
+  return sprint(code, index + 4);
 };
 
-const compile = (code, ip) => {
-  if (code[ip] === 99) {
-    const functionEnd = code.indexOf(100) + 1;
-    const functionBody = code.slice(ip, functionEnd);
-    functionDefinitions.push(functionBody);
-    return compile(code, functionEnd);
-  }
+const subtract = (code, index) => {
+  const [operand1, operand2, result] = code.slice(index + 1, index + 4);
+  code[result] = code[operand1] - code[operand2];
 
-  if (code[ip] === 9) {
-    return true;
-  }
-
-  return compile(code, ip + 1);
+  return sprint(code, index + 4);
 };
 
-const add = (code, ip) => {
-  const [o1, o2, res] = code.slice(ip + 1, ip + 4);
-  console.log(o1, o2, res);
-  code[res] = code[o1] + code[o2];
-  console.log(code[o1], code[o2], code[res], code);
+const multiply = (code, index) => {
+  const [operand1, operand2, result] = code.slice(index + 1, index + 4);
+  code[result] = code[operand1] * code[operand2];
+
+  return sprint(code, index + 4);
 };
 
-const functionStart = (code, ip) => {
-  const updatedIp = functionsInfo[code[ip + 1]]["end"];
+const moveBy = (code, index) => {
+  const [destination] = code.slice(index + 1, index + 2);
+  console.log(destination);
 
-  return execute(code, updatedIp + 1);
+  return sprint(code, destination);
 };
 
-const functionCall = (code, ip) => {
-  const funBody = functionsInfo[code[ip + 1]]["reference"];
-  execute(funBody, 0);
-  return execute(code, ip + 2);
+const copy = (code, index) => {
+  const [source, destination] = code.slice(index + 1, index + 3);
+  code[destination] = code[source];
+
+  return sprint(code, index + 3);
+};
+
+const areEqual = (code, index) => {
+  const [operand1, operand2, destination] = code.slice(index + 1, index + 4);
+
+  return code[operand1] === code[operand2]
+    ? sprint(code, destination)
+    : sprint(code, index + 4);
+};
+
+const lessThan = (code, index) => {
+  const [operand1, operand2, destination] = code.slice(index + 1, index + 4);
+
+  return code[operand1] < code[operand2]
+    ? sprint(code, destination)
+    : sprint(code, index + 4);
 };
 
 const halt = (code) => {
-  // console.log(code);
+  console.log("Halting execution");
   return code;
 };
 
-const operations = {
-  1: add,
-  99: functionStart,
-  105: functionCall,
-  9: halt,
-};
+const sprint = (code, index) => {
+  const operations = {
+    1: add,
+    2: subtract,
+    3: moveBy,
+    4: areEqual,
+    5: lessThan,
+    7: copy,
+    9: halt,
+  };
+  console.log(code[index]);
 
-const execute = (code, ip) => {
-  return operations[code[ip]](code, ip);
-};
+  const opcode = code[index];
+  const operation = operations[opcode];
 
-const sprint = (code, ip) => {
-  const isValid = compile(code, ip);
-  console.log(isValid);
-
-  if (isValid) {
-    return execute(code, ip);
+  if (operation) {
+    return operation(code, index);
+  } else {
+    return `Invalid opcode at position ${index}`;
   }
 };
 
 const main = () => {
-  return sprint(input, 0);
+  const input = [, 3, 3, 1, 4, 4, 1, 7, 1, 2, 9];
+  return sprint(input, 1);
 };
 
 console.log(main());
