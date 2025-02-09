@@ -12,16 +12,9 @@ const subtract = (code, index) => {
   return sprint(code, index + 4);
 };
 
-const multiply = (code, index) => {
-  const [operand1, operand2, result] = code.slice(index + 1, index + 4);
-  code[result] = code[operand1] * code[operand2];
-
-  return sprint(code, index + 4);
-};
 
 const moveBy = (code, index) => {
   const [destination] = code.slice(index + 1, index + 2);
-  console.log(destination);
 
   return sprint(code, destination);
 };
@@ -64,7 +57,6 @@ const sprint = (code, index) => {
     7: copy,
     9: halt,
   };
-  console.log(code[index]);
 
   const opcode = code[index];
   const operation = operations[opcode];
@@ -77,8 +69,9 @@ const sprint = (code, index) => {
 };
 
 const main = () => {
-  const input = [, 3, 3, 1, 4, 4, 1, 7, 1, 2, 9];
-  return sprint(input, 1);
+  const input = [, 3, 3, 1, 4, 4, 1, 7, 1, 2, 4, 1, 3, 3, 9];
+  console.table([input]);
+  return [sprint(input, 1)];
 };
 
-console.log(main());
+console.table(main());
