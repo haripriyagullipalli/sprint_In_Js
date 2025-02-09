@@ -10,15 +10,22 @@
 - 5 => greaterThan
 - 99 => functionStart
 - 100 => functionEnd
-- argumentsStart => 101
-- argumentsEnd => 102
+<!-- - argumentsStart => 101
+- argumentsEnd => 102 -->
 - returnValue => 150
 - functionCall => 105
 
 ## program
 
 
-- 99 1098 101 ? ? 102 1 ? ? 150 100 105 1098 101 ? ? 102  
+-  Input: 99 1098 1 2 3 100 105 1098
+-  definition array: 99 1098 1 2 3 100
+-  references = {1098:defintion array[0]};
+-  while executing whenever I see function call I will go definition array and I will execute I will store return value
+
+-while compiling I will check for parse error, I will store function in another table.
+-I create array to execute code , in that I will store function name and next location of the of the function,
+-while executing  
 
 
 ## Execution Steps
